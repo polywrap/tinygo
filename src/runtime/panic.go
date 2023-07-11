@@ -17,10 +17,6 @@ func trap()
 //export tinygo_longjmp
 func tinygo_longjmp(frame *deferFrame)
 
-//go:wasm-module wrap
-//export __wrap_abort
-func wrap_abort(msgPtr, msgLen, filePtr, fileLen, line, column uint32)
-
 // Compiler intrinsic.
 // Returns whether recover is supported on the current architecture.
 func supportsRecover() bool
@@ -50,30 +46,14 @@ func _panic(message interface{}) {
 			// unreachable
 		}
 	}
-	printstring("panic: ")
-	printitf(message)
-	printnl()
-	abort()
+	wrapAbort(message)
 }
 
 // Cause a runtime panic, which is (currently) always a string.
 func runtimePanic(msg string) {
-	wrapPanic(msg)
-}
-
-func wrapPanic(msg interface{}) {
-	msgStr := msg.(string)
-	msgPtr := unsafe.Pointer(&msgStr)
-
-	file := ""
-	var line, column uint32
-	line = 0
-	column = 0
-	filePtr := unsafe.Pointer(&file)
-
-	wrap_abort(*(*uint32)(msgPtr), uint32(len(msg.(string))), *(*uint32)(filePtr), uint32(len(file)), line, column)
-
-	abort()
+	// As long as this function is inined, llvm.returnaddress(0) will return
+	// something sensible.
+	runtimePanicAt(returnAddress(0), msg)
 }
 
 // Called at the start of a function that includes a deferred call.

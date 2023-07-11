@@ -1496,7 +1496,7 @@ func (b *builder) createInstruction(instr ssa.Instruction) {
 		b.createMapUpdate(mapType.Key(), m, key, value, instr.Pos())
 	case *ssa.Panic:
 		value := b.getValue(instr.X)
-		b.createRuntimeInvoke("wrapPanic", []llvm.Value{value}, "")
+		b.createRuntimeInvoke("_panic", []llvm.Value{value}, "")
 		b.CreateUnreachable()
 	case *ssa.Return:
 		if b.hasDeferFrame() {
