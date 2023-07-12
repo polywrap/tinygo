@@ -1495,7 +1495,7 @@ func (b *builder) createInstruction(instr ssa.Instruction) {
 		mapType := instr.Map.Type().Underlying().(*types.Map)
 		b.createMapUpdate(mapType.Key(), m, key, value, instr.Pos())
 	case *ssa.Panic:
-		value := b.getValue(instr.X)
+		value := b.getValue(instr.X, getPos(instr))
 		b.createRuntimeInvoke("_panic", []llvm.Value{value}, "")
 		b.CreateUnreachable()
 	case *ssa.Return:

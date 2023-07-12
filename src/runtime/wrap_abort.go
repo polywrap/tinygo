@@ -11,9 +11,8 @@ func __wrap_abort(
 	column uint32
 )
 
-func wrapAbort(message interface{}) {
-	msg := message.(string)
-	msgPtr := uint32(uintptr(unsafe.Pointer(&msgStr)))
+func wrapAbort(msg string) {
+	msgPtr := uint32(uintptr(unsafe.Pointer(&msg)))
 	msgLen := uint32(len(msg))
 
 	file := "wrap_abort.go"

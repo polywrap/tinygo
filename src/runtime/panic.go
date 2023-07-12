@@ -46,7 +46,8 @@ func _panic(message interface{}) {
 			// unreachable
 		}
 	}
-	wrapAbort(message)
+	msg := message.(string)
+	wrapAbort(msg)
 }
 
 // Cause a runtime panic, which is (currently) always a string.
@@ -54,6 +55,10 @@ func runtimePanic(msg string) {
 	// As long as this function is inined, llvm.returnaddress(0) will return
 	// something sensible.
 	runtimePanicAt(returnAddress(0), msg)
+}
+
+func runtimePanicAt(addr unsafe.Pointer, msg string) {
+	wrapAbort(msg)
 }
 
 // Called at the start of a function that includes a deferred call.
