@@ -8,7 +8,7 @@ func __wrap_abort(
 	filePtr,
 	fileLen,
 	line,
-	column uint32
+	column uint32,
 )
 
 func wrapAbort(msg string) {
