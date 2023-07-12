@@ -28,7 +28,7 @@ func wrapAbort(msg string) {
 		filePtr,
 		fileLen,
 		line,
-		column
+		column,
 	)
 
 	abort()
