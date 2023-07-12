@@ -1,5 +1,9 @@
 package runtime
 
+import (
+	"unsafe"
+)
+
 //go:wasm-module wrap
 //export __wrap_abort
 func __wrap_abort(
